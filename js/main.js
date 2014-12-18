@@ -3,14 +3,34 @@ jQuery.noConflict();
 
 +function($){
 function PageSwitcher($pages, options){
-    DEFAULTS = {transition_time: 200,
-                delay: 3000};
+    var DEFAULTS = {
+        transition_time: 200,
+        delay: 3000
+    },
+        _this = this;
 
     this.in_a_transition = false;
     this.$pages = $pages;
     this.options = jQuery.extend(DEFAULTS, options);
     this.current = 0;
     this.page_no = $pages.length;
+    this.transitions = $pages.map(function() {
+        var $page = $(this);
+        return {
+            type: $page.attr('transition'),
+            time: _this.getTransitionTime($page),
+            delay: _this.getDelay($page)
+        };
+    });
+    this.styles = this.transitions.map(function(i, trans) {
+        var next_trans = _this.transitions[(i + 1) % _this.transitions.length];
+        console.log(trans);
+        console.log(next_trans);
+        return {
+            before: _this.getTransitionStyle(trans.type, trans.time, false),
+            after: _this.getTransitionStyle(next_trans.type, next_trans.time, true)
+        }
+    });
     this.transitions =
         {none: function($current_item, $next, transition_time){
             $next.addClass('active');
@@ -36,14 +56,52 @@ PageSwitcher.prototype.getDelay = function($item){
 
 PageSwitcher.prototype.getTransitionTime = function($item){
     var time = $item.attr("time");
-    if (delay == null) {
-        delay = this.options['transition_time'];
+    if (time == null) {
+        time = this.options['transition_time'];
     }
-    return delay
+    return time
+};
+
+PageSwitcher.prototype.getTransitionStyle = function(type, time, outfading) {
+    var halfTime = time / 2; // use half the time for fading in, half for fading out
+    switch (type) {
+        case 'swipe':
+            var position = outfading ? "100%" : "-100%";
+            var transition = "position " + halfTime + "s";
+            return {
+                position: position,
+                transition: transition
+            };
+            break;
+        case 'fade':
+            var transition = "opacity " + halfTime + "s";
+            return {
+                opacity: "1",
+                transition: transition
+            };
+            break;
+        default:
+            throw Error("unknown transition " + type);
+    }
 };
 
 PageSwitcher.prototype.next = function() {
-
+    var current = this.current,
+        next = current + 1 % this.page_no,
+        $current = this.getItem(current),
+        $next = this.getItem(next),
+        currentStyle = this.styles[current].after,
+        nextStyle = this.styles[next].before,
+        transitionTime = this.transitions[next].time,
+        nextDelay = this.transitions[next].delay;
+    $current.removeAttr('style').css(currentStyle);
+    $next.removeAttr('style').css(nextStyle);
+    $current.removeClass('active');
+    window.setTimeout(function() {
+        $current.css('visibility', 'hidden');
+        $next.addClass('active')
+    }, transitionTime/2);
+    window.setTimeout(this.next, transitionTime + nextDelay)
 };
 
 PageSwitcher.prototype.run = function(){
