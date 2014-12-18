@@ -1,0 +1,11 @@
+[
+  {
+    "active": true,
+    "url": "http://{firstpart}/{secondpart}",
+    "time": 200,
+    "id": "mainsite",
+    "variables": {
+      "firstpart":
+    }
+  }
+]

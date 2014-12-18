@@ -1,8 +1,7 @@
 jQuery.noConflict();
 
 
-
-
++function($){
 function PageSwitcher($pages, options){
     DEFAULTS = {transition_time: 200,
                 delay: 3000};
@@ -14,8 +13,8 @@ function PageSwitcher($pages, options){
     this.page_no = $pages.length;
     this.transitions =
         {none: function($current_item, $next, transition_time){
-            $current_item.removeClass('active');
             $next.addClass('active');
+            $current_item.removeClass('active');
         },
         fade: function($current, $next, transition_time){
             $current.fadeOut(transition_time, function() {$current.removeClass('active')});
@@ -43,6 +42,10 @@ PageSwitcher.prototype.getTransitionTime = function($item){
     return delay
 };
 
+PageSwitcher.prototype.next = function() {
+
+};
+
 PageSwitcher.prototype.run = function(){
     if (this.in_a_transition){
         return null;
@@ -59,35 +62,37 @@ PageSwitcher.prototype.run = function(){
 
     var $current = this.getItem(this.current),
         $next = this.getItem(next),
-        transition = $current.attr("transition");
+        transition = $next.attr("transition");
 
-    if (transition = null){
+    if (!(transition in this.transitions)){
         transition = "none"
     }
 
-
     delay = this.getDelay($next);
-    this.transitions["fade"]($current, $next);
-
-    console.log(current, delay);
+    this.transitions[transition]($current, $next);
     this.in_a_transition = false;
     this.current = next;
     window.setTimeout(jQuery.proxy(this.run, this), delay);
 };
+function Iterator(item){
+    $item = $(item);
+    to_iterate = $item.attr('for').split(",");
+    if (to_iterate.length == 2) {
 
-
-jQuery(document).ready(function($) {
-    var $pages = $('.page'),
-        pageswitcher = new PageSwitcher($pages, {delay: 5000});
-
-    pageswitcher.run();
-
-
-
+    }
+    console.log(jQuery(this).html(), item, this);
+}
 
 
 
-});
+window.PageSwitcher = PageSwitcher;
+}(jQuery);
+
+
+
+
+
+
 
 
 
