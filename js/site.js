@@ -18,11 +18,10 @@ jQuery(document).ready(function($) {
 
     $myp=$('#websat');
     $myp.removeAttr('id');
-//$myp.remove();
+
     for (var i= 1; i<=24; i++){
         new_p = $myp.clone();
         new_p.children('img').attr('src', "http://file.wetter.at/mowis/animationen/websat_"+FormatNumberLength(i,2)+".jpg");
-        //console.log(new_p.html());
         new_p.insertAfter($myp);
     }
 

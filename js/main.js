@@ -1,7 +1,24 @@
-jQuery.noConflict();
-
+//jQuery.noConflict();
+"use strict";
 
 +function($){
+
+function StyleSheet(){
+    this.rules = {}
+}
+
+StyleSheet.prototype.AddRule = function(selector, rules){
+        if (!(selector in this.rules)){
+            this.rules[selector] = {};
+        }
+        this.rules[selector] = $.extend(this.rules[selector], rules)
+    };
+
+StyleSheet.prototype.write = function(){
+
+};
+
+
 function PageSwitcher($pages, options){
     var DEFAULTS = {
         transition_time: 400,
@@ -9,24 +26,22 @@ function PageSwitcher($pages, options){
     },
         _this = this;
 
-    $pages.each(function(i, item){
-            //set an id if not present
 
-            //set css next (fade_in)
+    this.page_no = $pages.length;
 
-            //set css active
+    //set css fadein
 
-            //set css last (fade_out)
-        }
-    );
+    //set css active
+
+    //set css fade_out
 
     this.in_a_transition = false;
     this.$pages = $pages;
     this.options = $.extend(DEFAULTS, options);
     this.current = 0;
-    this.page_no = $pages.length;
     this.transitions = $pages.map(function GetTransitions() {
         var $page = $(this);
+        $page.addClass('hidden'); // hide them all at the start
         return {
             type: $page.attr('transition'),
             time: _this.getTransitionTime($page),
@@ -54,37 +69,42 @@ PageSwitcher.prototype.getItem = function(index){
 PageSwitcher.prototype.getDelay = function($item){
     var delay = $item.attr("time");
     if (delay == null) {
-        delay = this.options['delay'];
+        return this.options['delay'];
     }
-    return delay
+    return parseInt(delay, 10)
 };
 
 PageSwitcher.prototype.getTransitionTime = function($item){
-    var time = $item.attr("transition_time");
+    var time = $item.attr("transition-time");
     if (time == null) {
-        time = this.options['transition_time'];
+        return this.options['transition_time'];
     }
-    return time
+    return parseInt(time, 10);
 };
 
 PageSwitcher.prototype.getTransitionStyle = function(type, time, outfading) {
-    var halfTime = time / 2 / 1000; // use half the time for fading in, half for fading out
+    var timeInSec = time / 1000;
     switch (type) {
         case 'swipe':
             var position = outfading ? "100%" : "-100%";
-            var transition = "position " + halfTime + "s";
+            var transition = "all " + timeInSec + "s";
             return {
-                position: position,
-                transition: transition
+                left: position,
+                transition: transition,
+                "z-index": "10" // the outfading one is in front of the new one
             };
             break;
         case 'fade':
-            var transition = "opacity " + halfTime + "s";
+            if (!outfading) {
+                return {}
+            }
+            var transition = "all " + timeInSec + "s";
             return {
-                //opacity: "1",
-                "transition": transition,
+                opacity: "0",
+                "transition": "all " + time + "s",
                 "-webkit-transition": transition,
-                "-moz-transition": transition
+                "-moz-transition": transition,
+                "z-index": "10" // the outfading one is in front of the new one
             };
             break;
         default:
@@ -95,7 +115,6 @@ PageSwitcher.prototype.getTransitionStyle = function(type, time, outfading) {
 PageSwitcher.prototype.next = function() {
     var current = this.current,
         next = (current + 1) % this.page_no;
-
     console.log(current, next, this.page_no);
     var $current = this.getItem(current),
         $next = this.getItem(next),
@@ -104,14 +123,33 @@ PageSwitcher.prototype.next = function() {
         transitionTime = this.transitions[next].time,
         delay = this.transitions[next].delay;
 
+    if (delay < transitionTime) {
+        console.log(delay, transitionTime, this);
+        throw Error('Delay was ' + delay + ', transitionTime was ' +
+        transitionTime)
+    }
+
+    console.log(transitionTime, delay);
     console.log(currentStyle, nextStyle);
+    // the current has finished its transition, and all its transitionstyles
+    // should have been overwritten by the active class
+    // thus taking them away doesnt change anything. Also the new styles
+    // should be all overwritten by the active class.
     $current.removeAttr('style').css(currentStyle);
-    $next.removeAttr('style').css(nextStyle);
+    // the next is not active, and thus the nextStyle is not overwritten.
+    // All transitions hide the box somewhere (opacity 0, left -100 or something)
+    // So after applying them, we can savely remove the hidden class
+    $next.removeAttr('style').css(nextStyle).removeClass('hidden');
+    // $next.removeAttr('style').css(nextStyle);
+    // no we set the right class to active and thereby start both css animations
     $current.removeClass('active');
     $next.addClass('active');
-    window.setTimeout(function() {
-        $current.removeAttr('style');
-    }, transitionTime/2);
+    // after this time, the animation has fully finished and the old current
+    // is out of screen or something
+    // we just hide it so the browser has a better time and can forget about them
+    /* window.setTimeout(function() {
+        $current.addClass('hidden');
+    }, transitionTime); */
 
     //delay=300;
     //console.log(current, next, this.page_no, transitionTime, nextDelay);
@@ -142,7 +180,7 @@ PageSwitcher.prototype.run = function(){
         transition = "none"
     }
 
-    delay = this.getDelay($next);
+    var delay = this.getDelay($next);
     ///this.transitions[transition]($current, $next);
     this.in_a_transition = false;
     this.current = next;
