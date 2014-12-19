@@ -147,9 +147,9 @@ PageSwitcher.prototype.next = function() {
     // after this time, the animation has fully finished and the old current
     // is out of screen or something
     // we just hide it so the browser has a better time and can forget about them
-    /* window.setTimeout(function() {
+    window.setTimeout(function() {
         $current.addClass('hidden');
-    }, transitionTime); */
+    }, transitionTime);
 
     //delay=300;
     //console.log(current, next, this.page_no, transitionTime, nextDelay);
