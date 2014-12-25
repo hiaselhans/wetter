@@ -12,3 +12,7 @@
 .page.hidden {
   display: none !important;
 }
+.page > iframe {
+  width: 100%;
+  height: 100%;
+}
