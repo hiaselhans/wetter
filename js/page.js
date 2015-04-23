@@ -61,7 +61,7 @@
                 height: '390',
                 width: '640',
                 playerVars: {
-                    controls: 0,
+                    controls: 0
                     //autohide: 1
                 },
                 videoId: _this.$element.find(".youtube").attr('data-id'),

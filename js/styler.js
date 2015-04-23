@@ -29,7 +29,7 @@
         var style, transition;
         switch (type) {
             case 'swipe':
-                var position = outfading ? "100%" : "-100%";
+                var position = outfading ? "-100%" : "100%";
                 transition = "all " + timeInSec + "s";
                 style = {
                     left: position,
