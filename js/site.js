@@ -28,10 +28,12 @@ jQuery(document).ready(function($) {
 
     var $pages = $('.page'),
         pageswitcher = new PageSwitcher($pages, {delay: 5000});
-
-    if ($('.page.active').length == 0) {
-        pageswitcher.next();
-    }
+    window.pageswitcher = pageswitcher;
+    pageswitcher.prepareAll(function () {
+        //if ($('.page.active').length == 0) {
+            pageswitcher.run();
+        //}
+    });
 
 
 
