@@ -1,3 +1,9 @@
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+}
 .page {
   position: fixed;
   width: 100%;
@@ -15,4 +21,22 @@
 .page > iframe {
   width: 100%;
   height: 100%;
+}
+.loading-screen {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 1000;
+}
+.loading-screen .load-box {
+  width: 16%;
+  height: 20%;
+  transition: all 1s;
+  float: left;
+}
+.loading-screen .load-box.incomplete {
+  background-color: red;
+}
+.loading-screen .load-box.complete {
+  background-color: blue;
 }

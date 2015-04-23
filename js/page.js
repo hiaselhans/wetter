@@ -35,28 +35,39 @@
         this.show(this.on_finish);
     };
 
-    Page.prototype.prepare = function (on_finish) {
+    Page.prototype.prepare = function (on_ready) {
+        var incomplete_elements = 1;  //one "shadow element"
+        var one_elem_complete = function () {
+            incomplete_elements -= 1;
+            if (incomplete_elements == 0) {
+                on_ready()
+            }
+        };
         if (this.is_youtube) {
-            this.prepare_youtube(on_finish)
-        } else {
-            on_finish()
+            incomplete_elements += 1;
+            this.prepare_youtube(one_elem_complete);
         }
+        this.$element.find('img').map(function () {
+            incomplete_elements += 1;
+            $(this).load(one_elem_complete);
+        });
+        this.$element.find('iframe').map(function () {
+            incomplete_elements += 1;
+            $(this).load(one_elem_complete);
+        });
+        one_elem_complete();
+        //after a timeout, I'm finished
+        window.setTimeout(function () {
+            if (incomplete_elements != 0) {
+                on_ready();
+                incomplete_elements = -1;
+            }
+        }, 10000)
     };
 
-    Page.prototype.prepare_youtube = function (on_finish) {
+    Page.prototype.prepare_youtube = function (on_ready) {
         var _this = this;
-        // 2. This code loads the IFrame Player API code asynchronously.
-        var tag = document.createElement('script');
-
-        tag.src = "https://www.youtube.com/iframe_api";
-
-
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        // 3. This function creates an <iframe> (and YouTube player)
-        //    after the API code downloads.
-        window.onYouTubeIframeAPIReady = function() {
+        call_on_YT_ready(function () {
             _this.player = new YT.Player(_this.$element.find(".youtube").get(0), {
                 height: '390',
                 width: '640',
@@ -66,11 +77,11 @@
                 },
                 videoId: _this.$element.find(".youtube").attr('data-id'),
                 events: {
+                    'onReady': on_ready,
                     'onStateChange': onPlayerStateChange
                 }
             });
-            on_finish();
-        };
+        });
 
 
         // 5. The API calls this function when the player's state changes.

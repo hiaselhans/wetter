@@ -27,12 +27,15 @@ jQuery(document).ready(function($) {
 
 
     var $pages = $('.page'),
-        pageswitcher = new PageSwitcher($pages, {delay: 5000});
+        pageswitcher = new PageSwitcher($pages, {delay: 5000}),
+        $load_screen = $('#loading_screen'),
+        $main_page = $('#main-content');
     window.pageswitcher = pageswitcher;
-    pageswitcher.prepareAll(function () {
-        //if ($('.page.active').length == 0) {
-            pageswitcher.run();
-        //}
+    pageswitcher.prepareAll($load_screen, function () {
+        $load_screen.hide();
+        //needs to wait a bit, otherwise transition events get funky
+        setTimeout(function() { pageswitcher.run() }, 100);
+        $main_page.css('display', 'block');
     });
 
 

@@ -45,18 +45,29 @@
         });
     }
 
-    PageSwitcher.prototype.prepareAll = function (on_finish) {
-        var _this = this,
-            createCallback = function (index) {
-                return function () {
-                    if (index + 1 < _this.page_no) {
-                        _this.pages[index + 1].prepare(createCallback(index + 1));
-                    } else {
-                        on_finish()
-                    }
+    PageSwitcher.prototype.prepareAll = function ($elem, on_finish) {
+        var incomplete_page_num = 0;
+        var finish_was_run = false; //never run on_finish twice
+        // prepares everything, while filling $elem with a loading screen
+        this.pages.map(function (_, page) {
+            console.log(page);
+            incomplete_page_num += 1;
+            var $box = $('<div class="load-box incomplete"></div>');
+            $elem.append($box);
+            page.prepare(function () {
+                console.log("something has finished", $box);
+                $box.removeClass('incomplete').addClass('complete');
+                incomplete_page_num -= 1;
+                if (incomplete_page_num == 0 && !finish_was_run) {
+                    finish_was_run = true;
+                    on_finish();
                 }
-            };
-        this.pages[0].prepare(createCallback(0));
+            })
+        });
+        if (incomplete_page_num == 0 && !finish_was_run) {
+            finish_was_run = true;
+            on_finish();
+        }
     };
 
     PageSwitcher.prototype.getItem = function(index){
@@ -106,9 +117,6 @@
     };
 
     PageSwitcher.prototype.run = function(){
-        //if (!this.$pages.find(".active")){
-        //    this.pages[0].show()
-        //}
         this.next()
     };
 
