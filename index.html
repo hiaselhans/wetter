@@ -14,12 +14,19 @@
 
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
+        <script src="https://www.youtube.com/iframe_api"></script>
+        <script src="js/vendor/require-2.1.17.min.js"></script>
+        <script>
+            require(["js/main.js"], function(main){
+                require(["js/site.js"]);
+            })
+        </script>
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
         <div class="loading-screen" id="loading_screen"></div>
         <div id="main-content" style="display:none">
-            <div class="page" data-time="6000" transition="fade">
+            <div class="page" data-time="6000" data-transition="fade">
                 <table width="100%" align="center" border="0">
                     <tr>
                         <td align="center"><img src="http://www.wetteralarm.at/uploads/pics/uwz-at_foehn_de.png" width="500"></td>
@@ -31,38 +38,38 @@
                     </tr>
                 </table>
             </div>
-            <div class="page" id="websat" data-time="10" transition="fade" transition-time="100">
+            <div class="page" id="websat" data-time="10" data-transition="fade" transition-time="100">
                 <h2>Zamg Satelitenbild</h2>
                 <img src="http://file.wetter.at/mowis/animationen/websat_24.jpg"><br>
             </div>
 
-            <div class="page" transition="swipe">
+            <div class="page" data-transition="swipe">
                 <div class="youtube" data-id="mgfdnAMSGRM">
                 </div>
             </div>
-            <div class="page" data-time="3000" transition="swipe">
+            <div class="page" data-time="3000" data-transition="swipe">
                 <iframe src="http://wetter.orf.at/tirol/prognose"></iframe>
             </div>
-            <div class="page" data-time="3000" transition="fade">
+            <div class="page" data-time="3000" data-transition="fade">
                 <iframe src="http://www.flug-wetter.at/bin/medasdb.php?flreq=FXOS42"></iframe>
             </div>
-            <div class="page" data-time="3000" transition="fade">
+            <div class="page" data-time="3000" data-transition="fade">
                 <h1>Termik</h1>
                 <img src="http://file.wetter.at/mowis/animationen/websat_24.jpg"><br>
                 <br>
                 <img src="http://www.flug-wetter.at/segelflug/Bilder/os_chart_opau.jpg"><br>
             </div>
-            <div class="page" data-time="3000" transition="fade">
+            <div class="page" data-time="3000" data-transition="fade">
                 <iframe src="http://www.flug-wetter.at/radar/all_inkl/loop_westen.html"></iframe>
             </div>
         </div>
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
-    <script src="js/yt.js"></script>
-    <script src="js/page.js"></script>
-    <script src="js/styler.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/site.js"></script>
-</body>
-</html>
+        <!--
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/yt.js"></script>
+        <script src="js/page.js"></script>
+        <script src="js/styler.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/site.js"></script>-->
+    </body>
+    </html>

@@ -1,6 +1,6 @@
+"use strict";
 
-+function($){
-    "use strict";
+define(["jquery"], function(){
 
 
     function StyleSheet() {
@@ -57,6 +57,9 @@
                     "z-index": "0" // the outfading one is in front of the new one
                 };
                 break;
+            case "none":
+                style = {};
+                break;
             default:
                 throw new Error("unknown transition " + type);
         }
@@ -82,5 +85,11 @@
         return sheet;
     };
 
-    window.StyleSheet = StyleSheet;
-}(jQuery);
+    function Seconds(time) {
+        return time/1000
+    }
+
+    return StyleSheet
+
+
+});
