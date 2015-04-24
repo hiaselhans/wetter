@@ -1,5 +1,7 @@
 "use strict";
-
+/*
+* Class to define css-rules and append them to the head of the document
+* */
 define(["jquery"], function(){
     // whatabout Nested stylesheets?
 

@@ -9,6 +9,7 @@
 
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <script src="js/vendor/require-2.1.17.min.js"></script>
         <script>
             require(["js/main.js"], function(main){
@@ -18,7 +19,18 @@
     </head>
     <body>
         <div class="loading-screen" id="loading_screen"></div>
-        <div id="main-content" style="display:none">
+        <div class="controls" style="">
+            <div class="play">
+                <i class="fa fa-play fa-6"></i>
+            </div>
+            <div class="pause">
+                <i class="fa fa-pause fa-6"></i>
+            </div>
+            <div class="next">
+                <i class="fa fa-forward fa-6"></i>
+            </div>
+        </div>
+        <div id="main-content">
             <div class="page" data-time="6000" data-transition="fade">
                 <table width="100%" align="center" border="0">
                     <tr>
@@ -31,7 +43,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="page" id="websat" data-time="10" data-transition="fade" transition-time="100">
+            <div class="page" id="websat" data-time="10" data-transition="fade" data-transition-time="100">
                 <h2>Zamg Satelitenbild</h2>
                 <img src="http://file.wetter.at/mowis/animationen/websat_24.jpg"><br>
             </div>

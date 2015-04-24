@@ -1,10 +1,13 @@
+/*
+* Main page-switching Logic
+* */
 "use strict";
 
 define(["jquery", "stylesheet", "transitions", "page"], function($, StyleSheet, Transitions, Page) {
 
     function PageSwitcher($pages, options) {
         var DEFAULTS = {
-                transition_time: 400,
+                transition_time: 500,
                 delay: 3000
             },
             _this = this;
@@ -13,6 +16,7 @@ define(["jquery", "stylesheet", "transitions", "page"], function($, StyleSheet, 
         this.page_no = $pages.length;
         this.current = 0;
         this.styles = new StyleSheet();
+        this.in_a_transition = false;
 
         this.transitions = $pages.map(function GetTransitions(index, page) {
             var $page = $(page),
@@ -20,7 +24,7 @@ define(["jquery", "stylesheet", "transitions", "page"], function($, StyleSheet, 
                 transition_time = _this.getTransitionTime($page),
                 transition_type = $page.attr("data-transition") || "none";
 
-            $page.addClass('in'); // hide them all at the start
+            $page.addClass('out').addClass("hidden"); // hide them all at the start
             $page.addClass(page_identifier);
             if (!(transition_type in Transitions)){
                 throw new Error("No Transition of type "+ transition_type);
@@ -33,6 +37,8 @@ define(["jquery", "stylesheet", "transitions", "page"], function($, StyleSheet, 
                 index: index
             };
         });
+        $($pages[0]).removeClass("hidden").addClass("active");
+        $($pages[1]).removeClass("hidden").removeClass("out").addClass("in");
 
         this.transitions.map(function AddStyles(_, transition) {
             var index = transition.index,
@@ -79,7 +85,7 @@ define(["jquery", "stylesheet", "transitions", "page"], function($, StyleSheet, 
     };
 
     PageSwitcher.prototype.getTransitionTime = function ($item) {
-        var time = $item.attr("transition-time");
+        var time = $item.attr("data-transition-time");
         if (time == null) {
             return this.options['transition_time'];
         }
@@ -87,22 +93,30 @@ define(["jquery", "stylesheet", "transitions", "page"], function($, StyleSheet, 
     };
 
     PageSwitcher.prototype.transition_finished = function (ev) {
-        var last = this.current - 1;
-        if (last < 0) {
-            last = this.page_no - 1
-        }
-        var $current = this.getItem(this.current),
-            $last = this.getItem(last);
-        $current.removeClass('in').addClass('out');
-        $last.addClass('hidden');
-        this.pages[this.current].show(jQuery.proxy(this.next, this))
+        var current = this.current,
+            next = (current + 1) % this.page_no,
+            $current = this.getItem(current),
+            $next = this.getItem(next);
+
+        $current.addClass('hidden');
+        $next.removeClass('in').addClass('out');
+        this.pages[next].show(jQuery.proxy(this.next, this));
+
+        this.current = next;
+        this.in_a_transition = false;
     };
 
     PageSwitcher.prototype.next = function () {
+        if (this.in_a_transition){
+            console.warn("Still in a transition: "+ this.current);
+            return
+        }
+        this.in_a_transition = true;
+
         var current = this.current,
             next = (current + 1) % this.page_no,
             next_next = (next + 1) % this.page_no;
-        //console.log(current, next, this.page_no);
+
         var $current = this.getItem(current),
             $next = this.getItem(next),
             $next_next = this.getItem(next_next),
@@ -114,13 +128,20 @@ define(["jquery", "stylesheet", "transitions", "page"], function($, StyleSheet, 
             throw Error('Delay was ' + delay + ', transitionTime was ' +
             transitionTime)
         }
+
+        //remove on_finish event handler if still there
+        this.pages[current].pause();
         //first, we prepare the one after
         $next_next.addClass('in').removeClass('out').removeClass('hidden');
-        var trans_finish_func = jQuery.proxy(this.transition_finished, this);
-        //$next.one("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", trans_finish_func);
-        $next.one("transitionend", trans_finish_func);
+
+        if (this.transitions[current].type == "none"){
+            this.transition_finished();
+        } else {
+            var trans_finish_func = jQuery.proxy(this.transition_finished, this);
+            //$next.one("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", trans_finish_func);
+            $next.one("transitionend", trans_finish_func);
+        }
         $current.removeClass('active');
-        this.current = next;
         $next.addClass('active');
         //trans_finish_func()
     };

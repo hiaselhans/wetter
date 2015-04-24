@@ -14,6 +14,8 @@ define(["jquery", "youtube"], function($, YT){
     }
 
     Page.prototype.show = function(on_finish) {
+        // Call on_finish after the page timeout has passed....
+
         // chromium fires both actions
         /*if (this.active){
             console.log("aha, double");
@@ -25,12 +27,21 @@ define(["jquery", "youtube"], function($, YT){
             _this.active = false;
             on_finish();
         };*/
+        var finish_fct = $.proxy(this._call_on_finish, this);
         this.on_finish = on_finish;
         if (this.is_youtube) {
             this.player.playVideo();
         } else {
-            this.timeout = window.setTimeout(on_finish, this.time);
+            this.timeout = window.setTimeout(finish_fct, this.time);
         }
+    };
+
+    Page.prototype._call_on_finish = function() {
+        console.log("aye");
+        if (this.on_finish != undefined) {
+            this.on_finish()
+        }
+        this.on_finish = undefined;
     };
 
     Page.prototype.pause = function () {
@@ -72,7 +83,7 @@ define(["jquery", "youtube"], function($, YT){
                 on_ready();
                 incomplete_elements = -1;
             }
-        }, 10000)
+        }, 5000)
     };
 
     Page.prototype.prepare_youtube = function (on_ready) {

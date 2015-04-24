@@ -1,4 +1,7 @@
-
+/*
+* Collection of possible Translations
+* Expand the object for other translations
+* */
 
 define([], function(){
 
