@@ -1,5 +1,5 @@
 
-require(["main", "jquery", "PageSwitcher"], function (_, $, PageSwitcher) {
+require(["main", "jquery", "pageswitcher"], function (_, $, PageSwitcher) {
 
     function FormatNumberLength(num, length) {
         var r = "" + num;

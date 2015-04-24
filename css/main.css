@@ -23,20 +23,26 @@ body {
   height: 100%;
 }
 .loading-screen {
-  width: 100%;
+  width: 80%;
+  padding-left: 10%;
+  padding-right: 10%;
   height: 100%;
   background-color: white;
   z-index: 1000;
 }
 .loading-screen .load-box {
-  width: 16%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  width: 14.28571429%;
   height: 20%;
   transition: all 1s;
   float: left;
+  border: 1px solid black;
 }
 .loading-screen .load-box.incomplete {
-  background-color: red;
+  background-color: #b10000;
 }
 .loading-screen .load-box.complete {
-  background-color: blue;
+  background-color: #00e800;
 }

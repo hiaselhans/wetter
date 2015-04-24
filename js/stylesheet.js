@@ -1,10 +1,11 @@
 "use strict";
 
 define(["jquery"], function(){
-
+    // whatabout Nested stylesheets?
 
     function StyleSheet() {
-        this.rules = {}
+        this.rules = {};
+        this.domElement = false;
     }
 
     StyleSheet.prototype.AddRule = function(selector, rules){
@@ -15,11 +16,13 @@ define(["jquery"], function(){
     };
 
     StyleSheet.prototype.write = function() {
-        var style = document.createElement('style');
-        style.type = 'text/css';
-        style.innerHTML = this.compile();
-        document.getElementsByTagName('head')[0].appendChild(style);
-        return style;
+        if (this.domElement == false){
+            this.domElement = document.createElement('style');
+            this.domElement.type = 'text/css';
+            document.getElementsByTagName('head')[0].appendChild(this.domElement);
+        }
+        this.domElement.innerHTML = this.compile();
+        return this.domElement;
     };
 
 
@@ -85,9 +88,6 @@ define(["jquery"], function(){
         return sheet;
     };
 
-    function Seconds(time) {
-        return time/1000
-    }
 
     return StyleSheet
 

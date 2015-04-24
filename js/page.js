@@ -4,7 +4,7 @@ define(["jquery", "youtube"], function($, YT){
     function Page($elem) {
         this.$element = $elem;
         var youtube_page = $elem.find(".youtube");
-        console.log(youtube_page);
+
         if (!youtube_page.length) {
             this.time = $elem.attr("data-time") || 100;
             this.is_youtube = false;
@@ -79,8 +79,8 @@ define(["jquery", "youtube"], function($, YT){
         var _this = this;
         YT.ready(function () {
             _this.player = new YT.Player(_this.$element.find(".youtube").get(0), {
-                height: '390',
-                width: '640',
+                //height: '390',
+                //width: '640',
                 playerVars: {
                     controls: 0
                     //autohide: 1
