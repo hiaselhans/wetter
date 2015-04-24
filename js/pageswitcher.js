@@ -57,9 +57,15 @@ define(["jquery", "stylesheet", "transitions", "page"], function($, StyleSheet, 
     }
 
     PageSwitcher.prototype.prepareAll = function ($elem, on_finish) {
-        var incomplete_page_num = 0;
-        var finish_was_run = false; //never run on_finish twice
+        var incomplete_page_num = 0,
+            finish_was_run = false; //never run on_finish twice
         // prepares everything, while filling $elem with a loading screen
+        console.log("JOx",$elem.selector);
+        new StyleSheet().AddRule($elem.selector + " .load-box", {
+                    width: ""+100/7+"%",
+                    height: ""+100/Math.ceil(this.page_no/7)+"%"
+                    }).write();
+
         this.pages.map(function (_, page) {
             incomplete_page_num += 1;
             var $box = $('<div class="load-box incomplete"></div>');

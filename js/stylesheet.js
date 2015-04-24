@@ -5,8 +5,8 @@
 define(["jquery"], function(){
     // whatabout Nested stylesheets?
 
-    function StyleSheet() {
-        this.rules = {};
+    function StyleSheet(rules) {
+        this.rules = rules || {};
         this.domElement = false;
     }
 
@@ -15,6 +15,7 @@ define(["jquery"], function(){
             this.rules[selector] = {};
         }
         this.rules[selector] = $.extend(this.rules[selector], rules)
+        return this;
     };
 
     StyleSheet.prototype.write = function() {

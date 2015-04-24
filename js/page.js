@@ -110,7 +110,7 @@ define(["jquery", "youtube"], function($, YT){
         //    the player should play for six seconds and then stop.
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.ENDED) {
-                _this.on_finish();
+                _this._call_on_finish();
             }
         }
     };
