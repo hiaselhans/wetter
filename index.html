@@ -20,15 +20,15 @@
     <body>
         <div class="loading-screen" id="loading_screen"></div>
         <div class="controls" style="">
-            <div class="play">
+            <a class="play" href="#">
                 <i class="fa fa-play fa-6"></i>
-            </div>
-            <div class="pause">
+            </a>
+            <a class="pause" href="#">
                 <i class="fa fa-pause fa-6"></i>
-            </div>
-            <div class="next">
+            </a>
+            <a class="next" href="#">
                 <i class="fa fa-forward fa-6"></i>
-            </div>
+            </a>
         </div>
         <div id="main-content">
             <div class="page" data-time="6000" data-transition="fade">
@@ -56,16 +56,19 @@
                 <iframe src="http://wetter.orf.at/tirol/prognose"></iframe>
             </div>
             <div class="page" data-time="3000" data-transition="fade">
-                <iframe src="http://www.flug-wetter.at/bin/medasdb.php?flreq=FXOS42"></iframe>
+                <iframe src="http://seefeld:seefeld@www.flug-wetter.at/bin/medasdb.php?flreq=FXOS42"></iframe>
             </div>
             <div class="page" data-time="3000" data-transition="fade">
                 <h1>Termik</h1>
                 <img src="http://file.wetter.at/mowis/animationen/websat_24.jpg"><br>
                 <br>
-                <img src="http://www.flug-wetter.at/segelflug/Bilder/os_chart_opau.jpg"><br>
+                <img src="http://seefeld:seefeld@www.flug-wetter.at/segelflug/Bilder/os_chart_opau.jpg"><br>
             </div>
             <div class="page" data-time="3000" data-transition="fade">
-                <iframe src="http://www.flug-wetter.at/radar/all_inkl/loop_westen.html"></iframe>
+                <div class="resource" data-src="http://wetter.orf.at/tirol/prognose" data-node="#ss-storyText">
+
+                </div>
+                <iframe src="http://seefeld:seefeld@www.flug-wetter.at/radar/all_inkl/loop_westen.html"></iframe>
             </div>
         </div>
     </body>

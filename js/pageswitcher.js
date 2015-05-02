@@ -58,20 +58,21 @@ define(["jquery", "stylesheet", "transitions", "page"], function($, StyleSheet, 
 
     PageSwitcher.prototype.prepareAll = function ($elem, on_finish) {
         var incomplete_page_num = 0,
-            finish_was_run = false; //never run on_finish twice
+            finish_was_run = false,//never run on_finish twice
+             boxsize = {
+                 width: ""+100/7+"%",
+                 height: ""+100/Math.ceil(this.page_no/7)+"%"
+             };
         // prepares everything, while filling $elem with a loading screen
         console.log("JOx",$elem.selector);
-        new StyleSheet().AddRule($elem.selector + " .load-box", {
-                    width: ""+100/7+"%",
-                    height: ""+100/Math.ceil(this.page_no/7)+"%"
-                    }).write();
+        new StyleSheet().AddRule($elem.selector + " .load-box", boxsize).write();
 
         this.pages.map(function (_, page) {
             incomplete_page_num += 1;
             var $box = $('<div class="load-box incomplete"></div>');
             $elem.append($box);
             page.prepare(function () {
-                console.info("finished loading:", $box);
+                //console.info("finished loading:", $box);
                 $box.removeClass('incomplete').addClass('complete');
                 incomplete_page_num -= 1;
                 if (incomplete_page_num == 0 && !finish_was_run) {
