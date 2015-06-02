@@ -1,6 +1,6 @@
 "use strict";
 
-define(["jquery", "youtube"], function($, YT){
+define(["jquery", "video/html5", "video/youtube"], function($, Video, Youtube){
 
     function addBust(url){
         var bust = "bust=" + new Date().getTime();
@@ -16,15 +16,18 @@ define(["jquery", "youtube"], function($, YT){
 
     function Page($elem) {
         this.$element = $elem;
-        var youtube_page = $elem.find(".youtube");
+        this.videos = []
+            .concat($.map($elem.find(".youtube"), function (video) {
+                        console.log("vid", video);
+                        return new Youtube($(video))
+                        }))
+            .concat($.map($elem.find("video"), function (video) {
+                        return new Video($(video));
+                        }));
 
-        if (!youtube_page.length) {
+        if (!this.videos.length) {
             this.time = $elem.attr("data-time") || 100;
-            this.is_youtube = false;
-        } else {
-            this.is_youtube = true;
-        }
-    }
+    }}
 
     Page.prototype.show = function(on_finish) {
         // Call on_finish after the page timeout has passed....
@@ -42,10 +45,10 @@ define(["jquery", "youtube"], function($, YT){
         };*/
         var finish_fct = $.proxy(this._call_on_finish, this);
         this.on_finish = on_finish;
-        if (this.is_youtube) {
-            this.player.playVideo();
+        if (this.videos.length){
+            this.videos[0].play(finish_fct);
         } else {
-            this.timeout = window.setTimeout(finish_fct, this.time);
+            this.timeout = window.setTimeout(finish_fct, this.time)
         }
     };
 
@@ -58,8 +61,8 @@ define(["jquery", "youtube"], function($, YT){
     };
 
     Page.prototype.pause = function () {
-        if (this.is_youtube) {
-            this.player.pauseVideo();
+        if (this.videos.length){
+            this.videos[0].pause()
         } else {
             window.clearTimeout(this.timeout);
         }
@@ -78,21 +81,22 @@ define(["jquery", "youtube"], function($, YT){
                 on_ready()
             }
         };
-        if (this.is_youtube) {
+        if (this.videos.length) {
             incomplete_elements += 1;
-            this.prepare_youtube(one_elem_complete);
+            console.log("jovid", this.videos);
+            this.videos[0].prepare(one_elem_complete);
         }
         this.$element.find('img').map(function (index, img) {
-            incomplete_elements += 1;
-            $(img).load(one_elem_complete);
-        });
-        this.$element.find('iframe').map(function (index, img) {
             incomplete_elements += 1;
             $(img).load(one_elem_complete);
         });
         this.$element.find(".resource").map(function(index, div){
             incomplete_elements += 1;
             _this.fetch_resource(div, one_elem_complete);
+        });
+        this.$element.find('iframe').map(function (index, img) {
+            incomplete_elements += 1;
+            $(img).load(one_elem_complete);
         });
         one_elem_complete();
         //after a timeout, I'm finished
@@ -132,14 +136,17 @@ define(["jquery", "youtube"], function($, YT){
         $iframe.attr("src", url);
 
         $iframe.load(function (ev) {
-            var found = $iframe.contents().find(node);
-
-            if (found){
+            $resource.empty();
+            try {
                 // todo: prefix content urls
-                $resource.append(found);
-            } else {
-                $resource.append($iframe);
+                var content = $iframe.contents(),
+                    found = content.find(node);
+                $resource.append(found)
+            } catch (e){
+                console.warn(e.message + ": " + url);
+                $resource.append($iframe)
             }
+
             on_ready();
         });
 

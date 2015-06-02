@@ -7,7 +7,7 @@ define(["jquery"], function(){
 
     function StyleSheet(rules) {
         this.rules = rules || {};
-        this.domElement = false;
+        this.$domElement = false;
     }
 
     StyleSheet.prototype.AddRule = function(selector, rules){
@@ -19,13 +19,13 @@ define(["jquery"], function(){
     };
 
     StyleSheet.prototype.write = function() {
-        if (this.domElement == false){
-            this.domElement = document.createElement('style');
-            this.domElement.type = 'text/css';
-            document.getElementsByTagName('head')[0].appendChild(this.domElement);
+        if (this.$domElement == false){
+            this.$domElement = document.createElement('style');
+            this.$domElement.type = 'text/css';
+            document.getElementsByTagName('head')[0].appendChild(this.$domElement);
         }
-        this.domElement.innerHTML = this.compile();
-        return this.domElement;
+        this.$domElement.innerHTML = this.compile();
+        return this.$domElement;
     };
 
 
