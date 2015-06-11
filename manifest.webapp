@@ -1,0 +1,10 @@
+{
+  "name": "Wetter",
+  "description": "Mega",
+  "launch_path": "/",
+  "developer": {
+    "name": "Booya",
+    "url": "http://github.com/hiaselhans"
+  },
+  "default_locale": "de"
+}
