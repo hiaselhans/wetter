@@ -1,11 +1,14 @@
 {
   "name": "Wetter",
   "description": "Mega",
+  "launch_path": "/",
   "developer": {
     "name": "Booya",
     "url": "http://github.com/hiaselhans"
   },
-  "default_locale": "de",
+  "installs_allowed_from": ["*"],
+  "default_locale": "en",
+  "chrome": {"navigation": true},
   "permissions": [
     "tcp-socket"
    ]
