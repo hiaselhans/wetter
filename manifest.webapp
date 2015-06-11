@@ -1,10 +1,13 @@
 {
   "name": "Wetter",
   "description": "Mega",
-  "launch_path": "/",
+  "launch_path": "http://hiaselhans.github.io/wetter",
   "developer": {
     "name": "Booya",
     "url": "http://github.com/hiaselhans"
   },
-  "default_locale": "de"
+  "default_locale": "de",
+  "permissions": [
+    "tcp-socket"
+   ]
 }
