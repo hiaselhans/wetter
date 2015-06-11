@@ -1,7 +1,7 @@
 {
   "name": "Wetter",
   "description": "Mega",
-  "launch_path": "/",
+  "launch_path": "/wetter",
   "developer": {
     "name": "Booya",
     "url": "http://github.com/hiaselhans"
